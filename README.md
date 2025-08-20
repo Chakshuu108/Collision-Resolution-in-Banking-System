@@ -1,4 +1,4 @@
-<h2>Banking System with Hash Table (C++)</h2>
+<h1>Collision Resolution in Banking System</h1>
 
 <b>Overview:</b><br>
 - A console-based banking system developed in C++.<br>
@@ -50,8 +50,3 @@
 - Fast operations even with large numbers of accounts.<br>
 - Secure and robust design suitable for real-world banking simulations.<br><br>
 
-<b>Future Improvements:</b><br>
-- Persistent storage using file I/O for saving accounts.<br>
-- Account-level login authentication.<br>
-- GUI integration for better user experience.<br>
-- Additional banking features like fund transfers and transaction history.<br>

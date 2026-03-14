@@ -18,13 +18,44 @@ from datetime import datetime
 def _get_config():
     try:
         import streamlit as st
-        sender  = st.secrets["email"]["sender"]
-        app_pwd = st.secrets["email"]["app_pwd"]
-        return sender, app_pwd
-    except KeyError:
+
+        # Try nested [email] section first
+        try:
+            sender  = st.secrets["email"]["sender"]
+            app_pwd = st.secrets["email"]["app_pwd"]
+            if sender and app_pwd:
+                return sender.strip(), app_pwd.strip()
+        except (KeyError, TypeError):
+            pass
+
+        # Try flat root-level keys
+        try:
+            sender  = st.secrets["sender"]
+            app_pwd = st.secrets["app_pwd"]
+            if sender and app_pwd:
+                return sender.strip(), app_pwd.strip()
+        except (KeyError, TypeError):
+            pass
+
         return None, None
+
     except Exception:
         return None, None
+
+
+def debug_secrets():
+    try:
+        import streamlit as st
+        keys = list(st.secrets.keys())
+        nested = {}
+        for k in keys:
+            try:
+                nested[k] = list(st.secrets[k].keys())
+            except Exception:
+                nested[k] = "flat"
+        return f"Secret keys found: {nested}"
+    except Exception as e:
+        return f"Could not read secrets: {e}"
 
 
 def _build_html_body(action_label, acc, extra_rows: list[tuple]) -> str:

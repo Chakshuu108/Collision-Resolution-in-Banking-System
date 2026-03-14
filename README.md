@@ -1,71 +1,111 @@
-<h1>Banking System with Hash Table (C++)</h1>
+# 🏦 Bank of Chakshu — Streamlit Banking System
 
-<h2>Overview:</h2>
-<ul>
-<li>A console-based banking system developed in C++.</li>
-<li>Efficiently manages multiple accounts using a hash table with cubic probing.</li>
-<li>Supports standard banking operations like creating, depositing, withdrawing, searching, and deleting accounts.</li>
-<li>Demonstrates use of <b>OOP concepts, dynamic memory allocation, and custom data structures</b>.</li>
-</ul>
+Full-stack banking app with registration, login, PDF receipts, and Gmail email notifications.
 
-<h2>Key Features:</h2>
-<h3>1. Account Management:</h3>
-<ul>
-<li>Each account has a unique 7-digit account number.</li>
-<li>Stores account holder's name, balance, email, and phone number.</li>
-<li>Ensures minimum deposit and withdrawal of 1000.</li>
-</ul>
+---
 
-<h3>2. Admin-Only Operations:</h3>
-<ul>
-<li>Display all accounts in the system.</li>
-<li>Check the current load factor of the hash table.</li>
-<li>Protected using a secure admin password.</li>
-</ul>
+## Project Structure
 
-<h3>3. Hash Table Implementation:</h3>
-<ul>
-<li>Uses cubic probing for collision resolution.</li>
-<li>Supports rehashing when load factor reaches 0.7 for optimal performance.</li>
-<li>Ensures fast insertion, search, and deletion with amortized O(1) complexity.</li>
-</ul>
+```
+banking_system/
+├── app.py              ← Entry point — run this
+├── database.py         ← SQLite database (all CRUD operations)
+├── customer.py         ← Register, Login, Deposit, Withdraw, Statement
+├── admin.py            ← Admin dashboard
+├── pdf_report.py       ← PDF generator (reportlab) — receipts & statements
+├── email_sender.py     ← Gmail SMTP email notifications
+├── styles.py           ← Dark gold CSS theme
+├── requirements.txt
+├── .streamlit/
+│   └── secrets.toml    ← ⚠️  EDIT THIS with your Gmail credentials
+└── bank_of_chakshu.db  ← Auto-created SQLite database on first run
+```
 
-<h3>4. Security & Validation:</h3>
-<ul>
-<li>Validates that account numbers are exactly 7 digits.</li>
-<li>Deposits and withdrawals are validated to meet the minimum threshold.</li>
-<li>Admin operations require password authentication.</li>
-</ul>
+---
 
-<h2>Classes:</h2>
-<h3>Account:</h3>
-<ul>
-<li>Stores individual account details.</li>
-<li>Methods: deposit(), withdraw(), displayAccount(), and getters.</li>
-</ul>
+## Setup
 
-<h3>HashTable:</h3>
-<ul>
-<li>Manages accounts using hashing with cubic probing.</li>
-<li>Handles collisions and deleted accounts effectively.</li>
-<li>Methods: insertAccount(), searchAccount(), deleteAccount(), displayAll(), getLoadFactor(), rehash().</li>
-</ul>
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
 
-<h2>Workflow:</h2>
-<ol>
-<li>User chooses an operation from the menu (create, deposit, withdraw, search, delete).</li>
-<li>System computes the hash index using the account number.</li>
-<li>If collisions occur, cubic probing is applied to find the next available slot.</li>
-<li>Accounts are dynamically stored in the hash table, ensuring fast access.</li>
-<li>Admin-only operations require password authentication for security.</li>
-<li>Load factor is monitored, and rehashing occurs automatically when necessary.</li>
-</ol>
+# 2. Configure Gmail (see below)
+# Edit .streamlit/secrets.toml
 
-<h2>Benefits:</h2>
-<ul>
-<li>Efficient memory usage with dynamic allocation.</li>
-<li>Fast operations even with large numbers of accounts.</li>
-<li>Secure and robust design suitable for real-world banking simulations.</li>
-</ul>
+# 3. Run
+streamlit run app.py
+```
 
+App opens at **http://localhost:8501**
 
+---
+
+## Gmail Email Setup (Required for email features)
+
+Edit `.streamlit/secrets.toml`:
+
+```toml
+[email]
+sender  = "yourgmail@gmail.com"
+app_pwd = "xxxx xxxx xxxx xxxx"
+```
+
+### How to get your Gmail App Password:
+1. Go to **myaccount.google.com → Security**
+2. Enable **2-Step Verification**
+3. Go to **Security → App Passwords**
+4. Select **Mail** + **Other (custom name)** → "Bank of Chakshu"
+5. Copy the 16-character password → paste into `secrets.toml`
+
+> Without this setup, the app still works — emails just won't send, and a warning appears.
+
+---
+
+## Login Credentials
+
+### Admin
+| Field    | Value             |
+|----------|-------------------|
+| Username | `chakshugupta108` |
+| Password | `BANKOFCHAKSHU`   |
+
+### Customer
+- Register a new account via the **Register** tab
+- Login with your **Username** or **Account Number** + password
+
+---
+
+## Features
+
+### Customer Portal
+| Feature | Description |
+|---|---|
+| Register | Full form: Name, Username, Email, Phone, DOB, Address, Initial Deposit, Password |
+| Login | Via username OR account number |
+| My Account | Balance, full profile, recent activity |
+| Deposit | Min Rs.1,000 → PDF receipt emailed + downloadable |
+| Withdraw | Min Rs.1,000, balance checked → PDF receipt emailed + downloadable |
+| Statement | Full transaction history → PDF emailed + downloadable |
+
+### Admin Portal
+| Feature | Description |
+|---|---|
+| Dashboard | Live stats, recent accounts & transactions |
+| All Accounts | Complete customer database |
+| All Transactions | Full transaction log |
+| Delete Account | Preview + permanent delete |
+
+### Email Notifications
+Every action triggers a **branded HTML email** with a **PDF attachment**:
+- ✅ Registration → Welcome letter with account details
+- ✅ Deposit → Deposit receipt with amount & new balance
+- ✅ Withdrawal → Withdrawal receipt with amount & new balance
+- ✅ Statement request → Full PDF statement
+
+---
+
+## Business Rules (from C++ original)
+- Account numbers: auto-assigned 7-digit (1000001, 1000002 …)
+- Minimum deposit: **Rs.1,000**
+- Minimum withdrawal: **Rs.1,000**
+- Cannot withdraw more than available balance

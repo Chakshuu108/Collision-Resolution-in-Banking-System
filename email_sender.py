@@ -149,8 +149,8 @@ def send_email(to_email: str, subject: str, action_label: str,
     """
     sender, app_pwd = _get_config()
     if not sender or not app_pwd:
-        return False, ("Email credentials not configured. "
-                       "Add [email] sender and app_pwd to .streamlit/secrets.toml")
+        return False, ("Email credentials not set. In Streamlit Cloud go to: "
+               "App Settings → Secrets → add [email] sender and app_pwd")
 
     try:
         msg = MIMEMultipart("mixed")
